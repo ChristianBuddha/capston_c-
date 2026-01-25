@@ -3,6 +3,8 @@ from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
+from launch.substitutions import PathJoinSubstitution
 
 
 def generate_launch_description():
@@ -35,7 +37,11 @@ def generate_launch_description():
         DeclareLaunchArgument("laser_yaw", default_value="0.0"),
         DeclareLaunchArgument(
             "bno055_params",
-            default_value="/home/first/cap/capstone/src/bno055/bno055/params/bno055_params_i2c.yaml",
+            default_value=PathJoinSubstitution([
+                FindPackageShare("bno055"),
+                "params",
+                "bno055_params_i2c.yaml",
+            ]),
         ),
 
         Node(
@@ -124,12 +130,12 @@ def generate_launch_description():
             ],
         ),
     
-        # Node(
-            # package="bno055",
-            # executable="bno055",
-            # name="bno055",
-            # parameters=[LaunchConfiguration("bno055_params")],
-            # output="screen",
-        # ),
+        Node(
+            package="bno055",
+            executable="bno055",
+            name="bno055",
+            parameters=[LaunchConfiguration("bno055_params")],
+            output="screen",
+        ),
     
     ])
